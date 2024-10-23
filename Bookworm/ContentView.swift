@@ -29,8 +29,9 @@ struct ContentView: View {
                             VStack(alignment: .leading){
                                 Text(book.title)
                                     .font(.headline)
+                                    .foregroundStyle(book.rating == 1 ? .red : .black)
                                 Text(book.author)
-                                    .foregroundStyle(.secondary)
+                                    .foregroundStyle(book.rating == 1 ? .red.opacity(0.5) : .black.opacity(0.5))
                             }
                         }
                     }

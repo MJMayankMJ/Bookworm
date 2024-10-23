@@ -29,6 +29,14 @@ struct DetailView: View {
                     .clipShape(.rect(cornerRadius: 18))
                     .offset(x: -5, y: -5)
             }
+            HStack(){
+                Spacer()
+                Text("\(book.date.formatted(date: .abbreviated, time: .omitted))")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                    .padding(.trailing, 10)
+                    .padding(.top, 3)
+            }
             Text(book.author)
                 .font(.title)
                 .foregroundStyle(.secondary)
