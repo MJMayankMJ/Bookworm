@@ -10,7 +10,11 @@ import SwiftUI
 
 struct ContentView: View {
     @Environment(\.modelContext) var modelContext
-    @Query var books: [Book]
+    @Query(sort: [
+        SortDescriptor(\Book.rating, order: .reverse),
+        SortDescriptor(\Book.title),
+        SortDescriptor(\Book.author)
+    ]) var books: [Book]
     
     @State private var showingAddBookView = false
     
@@ -31,12 +35,16 @@ struct ContentView: View {
                         }
                     }
                 }
+                .onDelete(perform: deleteBook )
             }
             .navigationDestination(for: Book.self, destination: { book in
                 DetailView(book: book)
             })
             .navigationTitle("BookWorm")
             .toolbar{
+                ToolbarItem(placement: .topBarLeading) {
+                    EditButton()
+                }
                 ToolbarItem(placement: .navigationBarTrailing){
                     Button("Add Book", systemImage: "plus"){
                         showingAddBookView.toggle()
@@ -46,6 +54,13 @@ struct ContentView: View {
             .sheet(isPresented: $showingAddBookView) {
                 AddBookView()
             }
+        }
+    }
+    
+    func deleteBook( at offsets: IndexSet){
+        for offset in offsets{
+            let book = books[offset]
+            modelContext.delete(book)
         }
     }
 }

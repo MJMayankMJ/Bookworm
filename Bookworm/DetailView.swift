@@ -9,6 +9,10 @@ import SwiftData
 import SwiftUI
 
 struct DetailView: View {
+    @Environment(\.dismiss) var dismiss
+    @Environment(\.modelContext) var modelContext
+    @State private var showingAlert = false
+    
     let book: Book
     var body: some View {
         ScrollView{
@@ -33,6 +37,22 @@ struct DetailView: View {
             RatingView(rating: .constant(book.rating))
                 .font(.largeTitle)
         }
+        .navigationTitle(book.title)
+        .navigationBarTitleDisplayMode(.inline)
+        .scrollBounceBehavior(.basedOnSize)
+        .alert("Delete Book", isPresented: $showingAlert) {
+            Button("Delete", role: .destructive, action: deleteBook)
+            Button("Cancel", role: .cancel) {}
+        }
+        .toolbar{
+            Button("Delete this book", systemImage: "trash"){
+                showingAlert = true
+            }
+        }
+    }
+    func deleteBook() {
+        modelContext.delete(book)
+        dismiss()
     }
 }
 
