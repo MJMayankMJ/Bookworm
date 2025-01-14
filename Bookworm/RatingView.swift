@@ -39,10 +39,25 @@ struct RatingView: View {
                     image(for: number)
                         .foregroundStyle(number > rating ? offColor : onColor)
                 }
+                .accessibilityLabel("\(number == 1 ? "1 star" : "\(number) stars")")
+                .accessibilityAddTraits(number > rating ? [] : [.isSelected])
             }
         }
         .buttonStyle(.plain)
         // without it in from in add boo view it taps every star one by one and this provents it.... it makes the tap are only limited to where u tap instead of whole form space in that area.... try without it to understand.....
+        .accessibilityElement()
+        .accessibilityLabel(label)
+        .accessibilityValue(rating == 1 ? "1 star" : "\(rating) stars")
+        .accessibilityAdjustableAction { direction in
+            switch direction {
+                case .increment:
+                    if rating < maximumRating { rating += 1 }
+                case .decrement:
+                    if rating > 1 { rating -= 1 }
+                default:
+                    break
+                }
+        }
     }
 }
 
